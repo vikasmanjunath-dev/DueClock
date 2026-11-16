@@ -1,0 +1,23 @@
+name: windows-connector
+on:
+  workflow_dispatch:
+  push:
+    tags: ["connector-v*"]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+      - name: Build installer
+        shell: pwsh
+        run: ./packaging/windows/build.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DueClockConnector-Setup
+          path: |
+            dist/DueClockConnector-Setup-*.exe
+            dist/DueClockConnector-Setup-*.exe.sha256
