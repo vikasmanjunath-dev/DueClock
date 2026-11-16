@@ -11,3 +11,4 @@ tests/core/reviewer_decisions.json
 .pytest_cache/
 dueclock/.udyam_cache.json
 .venv/
+blueprint/_archive_non_technical/
