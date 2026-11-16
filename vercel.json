@@ -1,6 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }],
-  "crons": [{ "path": "/v1/cron/reminders", "schedule": "0 4 * * *" }],
-  "functions": { "api/index.py": { "maxDuration": 60, "memory": 512 } }
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/v1/cron/reminders",
+      "schedule": "0 4 * * *"
+    }
+  ],
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 60,
+      "memory": 512
+    }
+  }
 }
