@@ -1,0 +1,2 @@
+-r requirements-connector.txt
+pyinstaller==6.*

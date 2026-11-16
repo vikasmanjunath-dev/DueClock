@@ -1,0 +1,3 @@
+# Runtime dependencies of the Windows connector only (no web framework: the connector is a plain client).
+httpx==0.27.*
+pydantic==2.*

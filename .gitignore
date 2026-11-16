@@ -1,0 +1,12 @@
+data/
+dist/
+build/
+__pycache__/
+*.pyc
+*.db
+.env
+.env.*
+tests/core/reviewer_decisions.json
+.DS_Store
+.pytest_cache/
+dueclock/.udyam_cache.json
