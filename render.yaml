@@ -1,0 +1,22 @@
+# Render blueprint (deploys from a GitHub repo). Written from memory of Render's format; check it in the Render dashboard.
+services:
+  - type: web
+    name: dueclock
+    runtime: docker
+    plan: free                       # no card needed (per Render's own docs; verify). Sleeps after 15 min without traffic, so keep it awake with an external uptime monitor pinging /v1/ready every 5 min (see deploy/README_DEPLOY.md). Use `starter` for a real always-on service.
+    healthCheckPath: /v1/ready
+    envVars:
+      - { key: DUECLOCK_ENV, value: production }
+      - { key: DUECLOCK_TRUST_PROXY, value: "1" }
+      - { key: DUECLOCK_SCHEDULER, value: "1" }
+      - { key: DUECLOCK_SCHEDULER_MINUTES, value: "60" }
+      - { key: DUECLOCK_PUBLIC_URL, sync: false }          # https://<your service>.onrender.com or your own domain
+      - { key: DUECLOCK_CONTROL_DB_URL, sync: false }
+      - { key: DUECLOCK_TENANT_DB_URL, sync: false }
+      - { key: PGPASSWORD, sync: false }
+      - { key: DUECLOCK_TOKEN_SECRET, sync: false }
+      - { key: DUECLOCK_WA_MODE, sync: false }
+      - { key: DUECLOCK_WA_PHONE_NUMBER_ID, sync: false }
+      - { key: DUECLOCK_WA_TOKEN, sync: false }
+      - { key: DUECLOCK_WA_APP_SECRET, sync: false }
+      - { key: DUECLOCK_WA_VERIFY_TOKEN, sync: false }
