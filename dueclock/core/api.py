@@ -140,6 +140,10 @@ def create_core_app(
             raise HTTPException(status_code=401, detail="invalid or missing API key")
         return control.store_for(ctx)
 
+    @app.get("/", include_in_schema=False)
+    def root():
+        return RedirectResponse(scan_url, status_code=307)      # public front door: the no-login exposure scan
+
     @app.get("/v1/health")
     def health() -> Dict[str, Any]:
         return {"status": "ok", "rate_table_confirmed": rates.fully_confirmed}
