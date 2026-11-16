@@ -16,3 +16,9 @@ __pycache__
 *.xlsx
 *.docx
 README*.md
+.venv
+.venv-1
+.pytest_cache
+.vercel
+.vercelignore
+index.html
