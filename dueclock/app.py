@@ -4,6 +4,8 @@ Provides REST APIs for Tally sync, statutory engine evaluation,
 automated reconciliation, and serves the Apple-styled No-Login Buyer Portal.
 """
 
+import urllib.parse
+
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
