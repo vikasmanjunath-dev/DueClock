@@ -1,0 +1,16 @@
+.venv
+.venv-1
+data
+tests
+blueprint
+reviewer_pack
+packaging
+scripts
+deploy
+*.pdf
+*.xlsx
+*.docx
+*.db
+.git
+.pytest_cache
+__pycache__
