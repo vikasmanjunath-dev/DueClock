@@ -289,7 +289,7 @@ def test_vercel_files():
     v = json.loads(read("vercel.json"))
     assert v["rewrites"][0]["destination"] == "/api/index" and v["crons"][0]["path"] == "/v1/cron/reminders"
     assert v["crons"][0]["schedule"].split()[1:] == ["4", "*", "*", "*"]                       # once a day (Hobby plan limit), 04:00 UTC = 09:30 IST
-    assert read("requirements.txt").strip() == "-r requirements-server.txt"
+    assert read("requirements.txt") == read("requirements-server.txt")      # Vercel cannot parse "-r" includes, so keep a flat identical copy
     e = read("api/index.py")
     assert "enforce_in_production" in e and "/tmp/dueclock" in e and "create_core_app()" in e
 
