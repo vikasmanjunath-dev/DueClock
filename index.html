@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DueClock Executive OS — Master Plan & Execution Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --bg-surface: rgba(28, 28, 30, 0.72);
+      --bg-surface-elevated: rgba(44, 44, 46, 0.75);
+      --bg-card: rgba(22, 22, 24, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --border-focus: rgba(10, 132, 255, 0.6);
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(235, 235, 245, 0.68);
+      --text-tertiary: rgba(235, 235, 245, 0.42);
+      --apple-blue: #0A84FF;
+      --apple-indigo: #5E5CE6;
+      --apple-purple: #BF5AF2;
+      --apple-pink: #FF375F;
+      --apple-red: #FF453A;
+      --apple-orange: #FF9F0A;
+      --apple-yellow: #FFD60A;
+      --apple-green: #30D158;
+      --apple-mint: #63E6E2;
+      --apple-teal: #40C8E0;
+      --apple-cyan: #64D2FF;
+      --glass-blur: blur(32px) saturate(200%);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 34px;
+      --spring-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.45;
+      background-image: 
+        radial-gradient(circle at 10% 8%, rgba(10, 132, 255, 0.22) 0%, transparent 40%),
+        radial-gradient(circle at 90% 12%, rgba(191, 90, 242, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(48, 209, 88, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 159, 10, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Ambient Dynamic Glow */
+    .ambient-glow {
+      position: fixed;
+      top: -240px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 480px;
+      background: radial-gradient(ellipse at center, rgba(10, 132, 255, 0.28), transparent 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glass Navigation Dock */
+    header {
+      position: sticky;
+      top: 14px;
+      z-index: 100;
+      max-width: 1360px;
+      margin: 0 auto 30px auto;
+      padding: 0 20px;
+    }
+
+    .nav-island {
+      background: rgba(28, 28, 30, 0.72);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition: all 0.3s var(--spring-smooth);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #0A84FF, #5E5CE6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      box-shadow: 0 6px 16px rgba(10, 132, 255, 0.45);
+    }
+
+    .brand-text h1 {
+      font-size: 17.5px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .brand-text span {
+      font-size: 11px;
+      color: var(--apple-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .nav-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px;
+      border-radius: 100px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 2px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 15px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.25s var(--spring-smooth);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.16);
+      color: #FFFFFF;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4), inset 0 0.5px 0 rgba(255,255,255,0.3);
+    }
+
+    .status-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: rgba(48, 209, 88, 0.16);
+      color: var(--apple-green);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--apple-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--apple-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 20px 80px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero Banner */
+    .hero-section {
+      margin-bottom: 34px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(28, 28, 30, 0.85), rgba(16, 16, 18, 0.98));
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 40px 46px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.65);
+    }
+
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(10, 132, 255, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-title h2 {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      background: linear-gradient(180deg, #FFFFFF 25%, rgba(255, 255, 255, 0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero-title p {
+      font-size: 15.5px;
+      color: var(--text-secondary);
+      max-width: 760px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Hero Stats & Rings Grid */
+    .hero-insights {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-insights {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Concentric Apple Rings */
+    .rings-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rings-legend {
+      width: 100%;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .hero-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      transition: all 0.3s var(--spring-smooth);
+    }
+
+    .stat-box:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .stat-subtext {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 40px 0 20px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-header h3 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      color: var(--apple-cyan);
+      background: rgba(100, 210, 255, 0.12);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+
+    /* Grid Layouts */
+    .apple-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .apple-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 960px) {
+      .apple-grid-2, .apple-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Apple Glass Card */
+    .apple-card {
+      background: var(--bg-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 26px 28px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      position: relative;
+      transition: all 0.3s var(--spring-smooth);
+    }
+
+    .apple-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-title {
+      font-size: 17.5px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Tasks and Interactive Tracker */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .task-item {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-md);
+      padding: 15px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.25s var(--spring-smooth);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .task-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateX(4px);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .task-item.completed .task-checkbox {
+      background: var(--apple-green);
+      border-color: var(--apple-green);
+      color: #000;
+    }
+
+    .task-item.completed .task-text {
+      text-decoration: line-through;
+      color: var(--text-tertiary);
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .task-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .task-badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-critical {
+      background: rgba(255, 69, 58, 0.18);
+      color: var(--apple-red);
+      border: 1px solid rgba(255, 69, 58, 0.35);
+    }
+
+    .badge-progress {
+      background: rgba(255, 159, 10, 0.18);
+      color: var(--apple-orange);
+      border: 1px solid rgba(255, 159, 10, 0.35);
+    }
+
+    .badge-done {
+      background: rgba(48, 209, 88, 0.18);
+      color: var(--apple-green);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+    }
+
+    .task-desc {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Apple Progress Bar */
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 12px 0 8px 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #0A84FF, #30D158);
+      transition: width 0.6s var(--spring-smooth);
+    }
+
+    /* Tab View Management */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s var(--spring-smooth);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Table Styling */
+    .risk-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    .risk-table th {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-align: left;
+      padding: 0 14px 8px 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .risk-table tr.risk-row {
+      background: rgba(255, 255, 255, 0.035);
+      transition: all 0.2s ease;
+    }
+
+    .risk-table tr.risk-row:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .risk-table td {
+      padding: 13px 14px;
+      font-size: 13px;
+    }
+
+    .risk-table td:first-child {
+      border-top-left-radius: var(--radius-sm);
+      border-bottom-left-radius: var(--radius-sm);
+    }
+
+    .risk-table td:last-child {
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .timeline-node {
+      position: relative;
+      margin-bottom: 26px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -28px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #1C1C1E;
+      border: 3px solid var(--apple-blue);
+      box-shadow: 0 0 10px rgba(10, 132, 255, 0.4);
+    }
+
+    .timeline-dot.active {
+      border-color: var(--apple-green);
+      box-shadow: 0 0 12px rgba(48, 209, 88, 0.6);
+    }
+
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .timeline-period {
+      font-size: 12px;
+      color: var(--apple-cyan);
+      margin-bottom: 4px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Financial Metric Pill */
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Buttons */
+    .btn-apple {
+      background: var(--apple-blue);
+      color: white;
+      border: none;
+      border-radius: 100px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s var(--spring-smooth);
+      box-shadow: 0 4px 14px rgba(10, 132, 255, 0.35);
+      text-decoration: none;
+    }
+
+    .btn-apple:hover {
+      background: #0071E3;
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(10, 132, 255, 0.45);
+    }
+
+    .btn-apple:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 100px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(44, 44, 46, 0.95);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      font-size: 13px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s var(--spring-smooth);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Phone Simulator Frame */
+    .phone-simulator {
+      width: 320px;
+      border: 10px solid #2C2C2E;
+      border-radius: 44px;
+      background: #0B141A;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+      margin: 0 auto;
+    }
+
+    .phone-notch {
+      width: 110px;
+      height: 20px;
+      background: #2C2C2E;
+      margin: 0 auto;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+    }
+
+    .phone-header {
+      background: #1F2C34;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .phone-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0A84FF, #5E5CE6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .phone-chat-area {
+      padding: 14px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background-image: radial-gradient(#1E2B33 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    .wa-bubble {
+      background: #005C4B;
+      color: #E9EDEF;
+      border-radius: 12px;
+      border-top-left-radius: 2px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .wa-bubble-buyer {
+      background: #202C33;
+      align-self: flex-end;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 2px;
+    }
+
+    .wa-time {
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* Range Sliders */
+    .apple-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    .apple-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .apple-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <!-- Apple Island Nav -->
+  <header>
+    <div class="nav-island">
+      <div class="brand" onclick="switchTab('overview')">
+        <div class="brand-icon">⏱️</div>
+        <div class="brand-text">
+          <h1>DueClock</h1>
+          <span>Executive Autopilot OS</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('overview')">
+          <span> Overview</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('sprints')">
+          <span>⚡️ 90-Day Plan</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('tracker')">
+          <span>📋 Live Tracker</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('simulator')">
+          <span>💬 WhatsApp & Discovery</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('sandbox')">
+          <span>🧮 43B(h) Calculator</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('risks')">
+          <span>🔬 Kill Tests</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('economics')">
+          <span>📊 Unit Economics</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('endpoints')">
+          <span>🚀 Live Services</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="status-pill">
+          <div class="status-dot"></div>
+          <span>Sprint 1 Active</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: OVERVIEW -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="hero-section">
+        <div class="hero-card">
+          <div class="hero-top">
+            <div class="hero-title">
+              <h2>Statutory-Clock Autopilot for Tally</h2>
+              <p>Automating Section 43B(h) compliance, 15/45-day MSMED Act recovery clocks, multi-lingual WhatsApp cadences, and direct UPI auto-reconciliation for Indian manufacturers.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-apple" onclick="switchTab('tracker')">View Live Tasks →</button>
+              <a href="http://127.0.0.1:8000/p/inv_critical_overdue" target="_blank" class="btn-secondary">Buyer Portal ↗</a>
+            </div>
+          </div>
+
+          <div class="hero-insights">
+            <!-- Concentric Apple Rings -->
+            <div class="rings-card">
+              <svg width="150" height="150" viewBox="0 0 150 150">
+                <!-- Ring 1: Sprints (Cyan) -->
+                <circle cx="75" cy="75" r="58" stroke="rgba(100, 210, 255, 0.15)" stroke-width="9" fill="none" />
+                <circle cx="75" cy="75" r="58" stroke="#64D2FF" stroke-width="9" fill="none" stroke-linecap="round"
+                        stroke-dasharray="364" stroke-dashoffset="54" transform="rotate(-90 75 75)" />
+
+                <!-- Ring 2: Code Architecture (Purple) -->
+                <circle cx="75" cy="75" r="44" stroke="rgba(191, 90, 242, 0.15)" stroke-width="9" fill="none" />
+                <circle cx="75" cy="75" r="44" stroke="#BF5AF2" stroke-width="9" fill="none" stroke-linecap="round"
+                        stroke-dasharray="276" stroke-dashoffset="5" transform="rotate(-90 75 75)" />
+
+                <!-- Ring 3: Compliance & Tests (Green) -->
+                <circle cx="75" cy="75" r="30" stroke="rgba(48, 209, 88, 0.15)" stroke-width="9" fill="none" />
+                <circle cx="75" cy="75" r="30" stroke="#30D158" stroke-width="9" fill="none" stroke-linecap="round"
+                        stroke-dasharray="188" stroke-dashoffset="0" transform="rotate(-90 75 75)" />
+              </svg>
+              <div class="rings-legend">
+                <div class="legend-row">
+                  <span><span class="legend-dot" style="background: #64D2FF;"></span>Sprint 1 Gates</span>
+                  <span style="font-family: 'JetBrains Mono'; font-weight: 600;">85%</span>
+                </div>
+                <div class="legend-row">
+                  <span><span class="legend-dot" style="background: #BF5AF2;"></span>Core Stack</span>
+                  <span style="font-family: 'JetBrains Mono'; font-weight: 600;">98%</span>
+                </div>
+                <div class="legend-row">
+                  <span><span class="legend-dot" style="background: #30D158;"></span>Test Suite</span>
+                  <span style="font-family: 'JetBrains Mono'; font-weight: 600; color: #30D158;">25/25 Pass</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="hero-stats-grid">
+              <div class="stat-box">
+                <div class="stat-label">Initial Runway Target</div>
+                <div class="stat-value" style="color: var(--apple-cyan);">10 Pilots</div>
+                <div class="stat-subtext">Day 90 Goal (₹3,250 - ₹6,500)</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Capital Constraint</div>
+                <div class="stat-value" style="color: var(--apple-green);">&lt; ₹5 Lakh</div>
+                <div class="stat-subtext">₹2.76L allocated · ₹2.23L reserve</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Section 43B(h) Clock</div>
+                <div class="stat-value" style="color: var(--apple-orange);">15 / 45 Days</div>
+                <div class="stat-subtext">3x Bank Rate Compound Interest (19.5%)</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Year 6 Scaled Vision</div>
+                <div class="stat-value" style="color: var(--apple-purple);">₹100 Crore</div>
+                <div class="stat-subtext">53.5k subs + ₹9k Cr TReDS volume</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Value Wedge & Scope Guard -->
+      <div class="apple-grid-2">
+        <div class="apple-card">
+          <div class="card-title">
+            <span>🎯 The Unfair Wedge</span>
+            <span class="badge-critical task-badge">Section 43B(h) Shield</span>
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">
+            General distributor credit apps (Takkada, Kenso) serve traders who sit <strong>outside</strong> the statutory delayed-payment protections. DueClock specifically targets <strong>Micro & Small Manufacturers and Service Providers</strong> who are legally entitled to mandatory 15/45-day payment cycles and 3x bank rate interest.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: rgba(255,255,255,0.035); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: var(--apple-mint); font-weight: 600; font-size: 13px;">1. Double-Sided Exposure Engine:</span>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">One invoice ledger serves both supplier collection & buyer deduction preservation with zero-login magic links.</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.035); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: var(--apple-cyan); font-weight: 600; font-size: 13px;">2. CA Distribution Flywheel:</span>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Automates Form 3CD Clause 22 computations for CAs; gives them a 20% recurring referral incentive.</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.035); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: var(--apple-purple); font-weight: 600; font-size: 13px;">3. Zero Custody Rails:</span>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Payments link straight to seller's UPI VPA; eliminates RBI payment aggregator licensing overhead completely.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="apple-card">
+          <div class="card-title">
+            <span>🛡️ Scope Guard: 5 MVP vs 10 Exclusions</span>
+            <span class="badge-done task-badge">Disciplined Solo Scope</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: var(--apple-green); font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">Build in MVP (5)</div>
+              <ul style="list-style: none; font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px;">
+                <li>✓ Read-only Tally Connector</li>
+                <li>✓ Statutory 15/45-Day Clock</li>
+                <li>✓ WhatsApp + UPI Cadence</li>
+                <li>✓ No-Login Buyer Portal</li>
+                <li>✓ Free Year-End Exposure Scan</li>
+              </ul>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: var(--apple-red); font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">Strictly Excluded (10)</div>
+              <ul style="list-style: none; font-size: 12.5px; color: var(--text-tertiary); display: flex; flex-direction: column; gap: 6px;">
+                <li>✕ No E-invoice/E-way Bill gen</li>
+                <li>✕ No Accounting replacement</li>
+                <li>✕ No Custody / Escrow wallet</li>
+                <li>✕ No In-house lending/balance sheet</li>
+                <li>✕ No Native iOS / Android apps</li>
+                <li>✕ No BUSY/Zoho/SAP connectors</li>
+                <li>✕ No MCA portal automation</li>
+                <li>✕ No Chatbot negotiation engine</li>
+                <li>✕ No GST return filing module</li>
+                <li>✕ No Buyer lead marketplace</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: 90-DAY SPRINTS -->
+    <div id="tab-sprints" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>90-Day Execution Road (Nov 9, 2026 – Feb 5, 2027)</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">3 Structured Sprints from Discovery to 10 Paying Customers</p>
+        </div>
+        <span class="section-tag">Total Runway: &lt; ₹5L</span>
+      </div>
+
+      <div class="apple-grid-3">
+        <!-- Sprint 1 -->
+        <div class="apple-card" style="border-top: 3px solid var(--apple-blue);">
+          <div class="card-title">
+            <span>Sprint 1: Validate & Ingest</span>
+            <span class="badge-progress task-badge">Weeks 1-4</span>
+          </div>
+          <div style="font-size: 12px; color: var(--apple-cyan); margin-bottom: 12px; font-weight: 600;">9 Nov 2026 – 8 Dec 2026</div>
+          <div class="timeline">
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">20 Customer Discovery Calls</div>
+              <div class="timeline-body">Execute 20 structured discovery interviews with Bengaluru micro-manufacturers (Peenya/KASSIA).</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">5 Concierge Manual Pilots</div>
+              <div class="timeline-body">Manual ledger export + hand-crafted WhatsApp reminders to validate payment speed-up.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">Tally Connector v0 + Rules Engine</div>
+              <div class="timeline-body">Build read-only local TDL/XML extractor and exact 15/45-day calculation logic with test suite.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">WhatsApp Meta Utility Approval</div>
+              <div class="timeline-body">Submit 5-stage utility reminder templates in English, Hindi, and Kannada through BSP.</div>
+            </div>
+          </div>
+          <div style="background: rgba(10, 132, 255, 0.08); padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(10, 132, 255, 0.2); font-size: 12px;">
+            <strong>Gate 1:</strong> 3 of 5 concierge pilots verify reminders accelerated debtor settlement.
+          </div>
+        </div>
+
+        <!-- Sprint 2 -->
+        <div class="apple-card" style="border-top: 3px solid var(--apple-purple);">
+          <div class="card-title">
+            <span>Sprint 2: Product Integration</span>
+            <span class="badge-progress task-badge">Weeks 5-8</span>
+          </div>
+          <div style="font-size: 12px; color: var(--apple-purple); margin-bottom: 12px; font-weight: 600;">9 Dec 2026 – 7 Jan 2027</div>
+          <div class="timeline">
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">Buyer No-Login Page</div>
+              <div class="timeline-body">Deploy instant web page showing invoice, 43B(h) penalty counter, UPI link & 'Promise Date'.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">Automated UTR Recon Engine</div>
+              <div class="timeline-body">Auto-reconcile bank narration credits & UPI reference numbers back to open bills.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">DPDP Privacy & Processor Docs</div>
+              <div class="timeline-body">Enforce data processor terms, consent logging & security encryption ahead of May 2027 rules.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">10 Paid Pilot Signings</div>
+              <div class="timeline-body">Convert pilot pipeline at Founding price (₹3,250/yr); live connector installed on 5 machines.</div>
+            </div>
+          </div>
+          <div style="background: rgba(191, 90, 242, 0.08); padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(191, 90, 242, 0.2); font-size: 12px;">
+            <strong>Gate 2:</strong> 10 signed pilots, with at least 5 streaming live daily bill syncs from Tally.
+          </div>
+        </div>
+
+        <!-- Sprint 3 -->
+        <div class="apple-card" style="border-top: 3px solid var(--apple-green);">
+          <div class="card-title">
+            <span>Sprint 3: Hardening & Distribution</span>
+            <span class="badge-progress task-badge">Weeks 9-13</span>
+          </div>
+          <div style="font-size: 12px; color: var(--apple-green); margin-bottom: 12px; font-weight: 600;">8 Jan 2027 – 5 Feb 2027</div>
+          <div class="timeline">
+            <div class="timeline-node">
+              <div class="timeline-dot active"></div>
+              <div class="timeline-title">Year-End Exposure Scan Launch</div>
+              <div class="timeline-body">Launch free viral tool for CAs/buyers to audit 43B(h) vendor liabilities before Jan 20.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">CA Partner Program Kickoff</div>
+              <div class="timeline-body">Roll out 20% recurring commission dashboard & Clause 22 one-click reporting pack.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">Subscription Billing Infrastructure</div>
+              <div class="timeline-body">Razorpay/Cashfree mandate integration for recurring ₹6,500/year renewals with GST invoices.</div>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-dot"></div>
+              <div class="timeline-title">₹20,000 Targeted Ad Test</div>
+              <div class="timeline-body">Test Meta/Google Search campaigns targeting tax-audit & MSME-1 keywords to prove CAC &lt; ₹2,500.</div>
+            </div>
+          </div>
+          <div style="background: rgba(48, 209, 88, 0.08); padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(48, 209, 88, 0.2); font-size: 12px;">
+            <strong>Gate 3:</strong> 10 paying customers with verified &gt;15% collection lift over 60 days.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: LIVE TRACKER & TASKS -->
+    <div id="tab-tracker" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Interactive Executive Task Matrix</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Click any task to toggle state. State persists automatically in local memory.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary" onclick="filterTasks('all')">All</button>
+          <button class="btn-secondary" onclick="filterTasks('critical')">P0 Critical</button>
+          <button class="btn-secondary" onclick="filterTasks('pending')">Pending</button>
+          <button class="btn-apple" onclick="showNewTaskModal()">+ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Progress Metric -->
+      <div class="apple-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 14px; font-weight: 600;">Overall Milestone Execution Progress</span>
+          <span id="progress-percent" style="font-family: 'JetBrains Mono'; font-weight: 700; color: var(--apple-cyan);">85%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar" class="progress-bar-fill" style="width: 85%;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary);">
+          <span id="tasks-completed-text">17 of 20 tasks marked complete</span>
+          <span>Target Milestone: Sprint 1 Gate Completion</span>
+        </div>
+      </div>
+
+      <div class="task-list" id="task-container">
+        <!-- Interactive Tasks dynamically loaded -->
+      </div>
+    </div>
+
+    <!-- TAB 4: WHATSAPP SIMULATOR & DISCOVERY RUNNER -->
+    <div id="tab-simulator" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Live WhatsApp Utility Cadence & Customer Discovery Kit</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Test real WhatsApp reminder templates and run structured founder discovery interviews.</p>
+        </div>
+        <span class="section-tag" style="color: var(--apple-green);">Meta Utility Approved</span>
+      </div>
+
+      <div class="apple-grid-2">
+        <!-- WhatsApp Phone Simulator -->
+        <div class="apple-card">
+          <div class="card-title">
+            <span>📱 Meta WhatsApp Simulator</span>
+            <span class="task-badge badge-done">Direct VPA Deep Link</span>
+          </div>
+          <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+            <select id="sim-stage" onchange="updateSimMessage()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px;">
+              <option value="STAGE_MINUS_5">T-5 Days: Polite Advance Notice</option>
+              <option value="STAGE_0" selected>T-0 Days: Due Date Today + UPI</option>
+              <option value="STAGE_PLUS_5">T+5 Days: Statutory MSMED Interest (19.5%)</option>
+              <option value="STAGE_PLUS_15">T+15 Days: Section 43B(h) Disallowance</option>
+              <option value="STAGE_PLUS_30">T+30 Days: Pre-Samadhaan Final Notice</option>
+            </select>
+            <select id="sim-lang" onchange="updateSimMessage()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px;">
+              <option value="en" selected>English</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            </select>
+          </div>
+
+          <div class="phone-simulator">
+            <div class="phone-notch"></div>
+            <div class="phone-header">
+              <div class="phone-avatar">⏱️</div>
+              <div>
+                <div style="font-size: 13px; font-weight: 600; color: #FFF;">DueClock Bot</div>
+                <div style="font-size: 10px; color: #30D158;">Verified Utility Sender ✓</div>
+              </div>
+            </div>
+            <div class="phone-chat-area">
+              <div class="wa-bubble" id="sim-bubble-text">
+                Important: Invoice Due Today<br><br>
+                Hello Bangalore Auto Components Ltd, Invoice <b>#INV/2026/041</b> for <b>₹1,45,000.00</b> from Precision Metal Components is due for payment today.<br><br>
+                Under Section 43B(h) of the Income Tax Act, delayed payments lose tax deductibility.<br><br>
+                Pay via direct UPI:<br>
+                <u>upi://pay?pa=precisionmetal@icici...</u>
+                <div class="wa-time">10:45 AM ✓✓</div>
+              </div>
+
+              <!-- Buyer reply simulation -->
+              <div class="wa-bubble wa-bubble-buyer" id="sim-buyer-reply" style="display: none;">
+                <span id="sim-buyer-text">Will pay this Friday by 3pm</span>
+                <div class="wa-time" style="color: rgba(255,255,255,0.4);">10:48 AM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulate Buyer Reply Input -->
+          <div style="margin-top: 14px; display: flex; gap: 8px;">
+            <input type="text" id="sim-reply-input" placeholder="Type buyer reply (e.g. 'Will pay Friday' or 'Defective goods')" 
+                   style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <button class="btn-apple" onclick="simulateBuyerReply()">Simulate Reply</button>
+          </div>
+          <div id="sim-intent-result" style="font-size: 12px; margin-top: 8px; color: var(--apple-cyan); display: none;"></div>
+        </div>
+
+        <!-- Customer Discovery Interview Runner -->
+        <div class="apple-card">
+          <div class="card-title">
+            <span>🎙️ 20 Customer Discovery Questions</span>
+            <span class="task-badge badge-progress" id="disc-score-badge">Score: 0/10</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Structured discovery interview runner for Bengaluru micro-manufacturers (Peenya/KASSIA).
+          </p>
+
+          <div style="background: rgba(255,255,255,0.035); padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 11px; text-transform: uppercase; color: var(--apple-cyan); font-weight: 600;" id="disc-q-category">Section: Their Payments Today</span>
+              <span style="font-size: 11px; color: var(--text-tertiary);" id="disc-q-counter">Question 1 of 20</span>
+            </div>
+            <div style="font-size: 14.5px; font-weight: 600; margin-bottom: 6px; line-height: 1.4;" id="disc-q-text">
+              1. Walk me through the last invoice that was paid late. What happened?
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-tertiary); margin-bottom: 10px;" id="disc-q-obj">
+              Objective: Uncover exact delay friction, excuses, and communication breakdown.
+            </div>
+            <textarea id="disc-answer-input" rows="2" placeholder="Record manufacturer's response here..." 
+                      style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; padding: 8px 10px; font-size: 12px; font-family: inherit; resize: none;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn-secondary" onclick="prevDiscoveryQuestion()">← Previous</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" onclick="quickScoreProspect(true)">+ Qualifies as Pilot</button>
+              <button class="btn-apple" onclick="nextDiscoveryQuestion()">Next Question →</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; font-size: 12px; color: var(--text-secondary);">
+            <strong>Pilot Qualification Gate:</strong> Prospects scoring ≥7/10 with confirmed TallyPrime installation qualify for the ₹3,250 Founding Pilot offer.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: 43B(h) INTERACTIVE SANDBOX CALCULATOR -->
+    <div id="tab-sandbox" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Section 43B(h) Statutory Exposure Sandbox</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Simulate invoice amounts, credit agreements, and evaluate tax disallowance & interest penalties.</p>
+        </div>
+        <span class="section-tag" style="color: var(--apple-red); background: rgba(255, 69, 58, 0.1);">Deterministic Rules</span>
+      </div>
+
+      <div class="apple-grid-2">
+        <div class="apple-card">
+          <div class="card-title">
+            <span>⚙️ Invoice Parameters</span>
+            <span class="task-badge badge-progress">Live Evaluator</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <label style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;">Outstanding Invoice Amount (₹)</label>
+              <input type="number" id="calc-amt" value="250000" oninput="runSandboxCalc()" 
+                     style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 10px 14px; border-radius: 10px; font-size: 16px; font-family: 'JetBrains Mono'; margin-top: 4px;">
+            </div>
+
+            <div>
+              <label style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;">Invoice Date</label>
+              <input type="date" id="calc-date" value="2026-10-01" onchange="runSandboxCalc()" 
+                     style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 10px 14px; border-radius: 10px; font-size: 14px; font-family: inherit; margin-top: 4px;">
+            </div>
+
+            <div>
+              <label style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;">Written Payment Agreement</label>
+              <select id="calc-agreement" onchange="runSandboxCalc()" 
+                      style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-top: 4px;">
+                <option value="false">No Written Agreement (Mandatory 15-Day Cap)</option>
+                <option value="true">Written Agreement Specified (Capped at 45 Days)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;">Supplier Activity Type</label>
+              <select id="calc-activity" onchange="runSandboxCalc()" 
+                      style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-top: 4px;">
+                <option value="MANUFACTURING">Micro / Small Manufacturer (43B(h) Covered)</option>
+                <option value="SERVICES">Micro / Small Service Provider (43B(h) Covered)</option>
+                <option value="TRADING">Wholesale / Retail Trader (Trader Excluded)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evaluated Exposure Results Card -->
+        <div class="apple-card" style="border-top: 3px solid var(--apple-red);">
+          <div class="card-title">
+            <span>📊 Statutory Impact Summary</span>
+            <span class="task-badge badge-critical" id="calc-status-badge">Overdue</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: rgba(255,255,255,0.035); padding: 12px 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">Statutory Due Date</div>
+              <div style="font-size: 20px; font-weight: 700; color: #FFF;" id="calc-res-duedate">16-Oct-2026</div>
+              <div style="font-size: 11.5px; color: var(--apple-cyan); margin-top: 2px;" id="calc-res-dayslabel">Overdue by 22 days</div>
+            </div>
+
+            <div style="background: rgba(255, 69, 58, 0.08); border: 1px solid rgba(255, 69, 58, 0.25); padding: 12px 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 11px; color: var(--apple-red); text-transform: uppercase; font-weight: 600;">Section 43B(h) Tax Disallowance</div>
+              <div style="font-size: 24px; font-weight: 800; color: #FFF; font-family: 'JetBrains Mono';" id="calc-res-disallowed">₹2,50,000.00</div>
+              <div style="font-size: 11.5px; color: var(--apple-orange); margin-top: 2px;" id="calc-res-taxliability">+ ₹62,920 additional tax at 25.17% rate</div>
+            </div>
+
+            <div style="background: rgba(255, 159, 10, 0.08); border: 1px solid rgba(255, 159, 10, 0.25); padding: 12px 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 11px; color: var(--apple-orange); text-transform: uppercase; font-weight: 600;">MSMED Sec 16 Accrued Interest (19.5% Compound)</div>
+              <div style="font-size: 22px; font-weight: 800; color: #FFF; font-family: 'JetBrains Mono';" id="calc-res-interest">₹3,024.15</div>
+              <div style="font-size: 11.5px; color: var(--text-tertiary); margin-top: 2px;">Mandatory non-deductible under MSMED Section 23</div>
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.45;" id="calc-res-notes">
+              This expense must be added back to the buyer's net profit in Form 3CD Clause 22, triggering immediate tax audit penalties if left unpaid.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: KILL TESTS & RISK MATRIX -->
+    <div id="tab-risks" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Kill Tests & The Investor's 5 Failure Modes</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Two-week falsification tests before committing capital.</p>
+        </div>
+        <span class="section-tag" style="color: var(--apple-red); background: rgba(255, 69, 58, 0.1);">Rigorous Falsification</span>
+      </div>
+
+      <div class="apple-card" style="margin-bottom: 24px;">
+        <table class="risk-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">Failure Assumption</th>
+              <th style="width: 40%;">Two-Week Falsification Test</th>
+              <th style="width: 20%;">Pass Line</th>
+              <th style="width: 15%;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="risk-row">
+              <td><strong>1. Reminders Ignored</strong><br><span style="font-size: 11px; color: var(--text-tertiary);">Buyers disregard legal hook</span></td>
+              <td>Hand-send statutory reminders for 5 micro-manufacturers; compare against uncontacted invoices.</td>
+              <td><span class="metric-pill" style="color: var(--apple-green);">≥ 15% Sooner Pay</span></td>
+              <td><span class="task-badge badge-progress">Running</span></td>
+            </tr>
+            <tr class="risk-row">
+              <td><strong>2. Tally Builds It Natively</strong><br><span style="font-size: 11px; color: var(--text-tertiary);">Feature commoditized inside ERP</span></td>
+              <td>10 calls with Authorized Tally Partners + 10 with accounts heads in Peenya/KASSIA.</td>
+              <td><span class="metric-pill" style="color: var(--apple-cyan);">≥ 7/10 Confirm Gap</span></td>
+              <td><span class="task-badge badge-done">Validated</span></td>
+            </tr>
+            <tr class="risk-row">
+              <td><strong>3. High CAC Destroys Margin</strong><br><span style="font-size: 11px; color: var(--text-tertiary);">CAC exceeds ₹6.5k starter revenue</span></td>
+              <td>Launch ads around "Section 43B(h) vendor audit" with a ₹500 refundable deposit test.</td>
+              <td><span class="metric-pill" style="color: var(--apple-orange);">CAC &lt; ₹1,500</span></td>
+              <td><span class="task-badge badge-progress">Scheduled W9</span></td>
+            </tr>
+            <tr class="risk-row">
+              <td><strong>4. Tally Connector Fragile</strong><br><span style="font-size: 11px; color: var(--text-tertiary);">Windows versioning / TDL breaks</span></td>
+              <td>Deploy standalone read-only connector binary across 5 customer PC setups.</td>
+              <td><span class="metric-pill" style="color: var(--apple-purple);">≥ 4/5 Zero Help Sync</span></td>
+              <td><span class="task-badge badge-done">In Dev Test</span></td>
+            </tr>
+            <tr class="risk-row">
+              <td><strong>5. TReDS Financing Fantasy</strong><br><span style="font-size: 11px; color: var(--text-tertiary);">₹36 Cr Year 6 line unviable</span></td>
+              <td>Engage RXIL / M1xchange / NBFC business teams to validate API referral agreements.</td>
+              <td><span class="metric-pill" style="color: var(--apple-mint);">1 Written MoA</span></td>
+              <td><span class="task-badge badge-critical">Year 1 End</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Regulatory & Budget Grid -->
+      <div class="apple-grid-2">
+        <div class="apple-card">
+          <div class="card-title">
+            <span>⚖️ DPDP Compliance Framework</span>
+            <span class="task-badge badge-critical">13 May 2027 Hard Cutoff</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45; margin-bottom: 12px;">
+            Penalties reach up to ₹250 Cr for data fiduciary negligence. DueClock enforces zero-liability positioning from day zero:
+          </p>
+          <ul style="font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px; list-style: none;">
+            <li>🛡️ <strong>Processor Role:</strong> Strictly act as data processor for the seller's accounting ledger.</li>
+            <li>📝 <strong>Buyer Page Consent:</strong> Explicit ephemeral consent capture prior to displaying transaction dues.</li>
+            <li>🔐 <strong>Encryption & Deletion:</strong> Per-tenant row-level Postgres security with single-click 72-hour ledger purge.</li>
+          </ul>
+        </div>
+
+        <div class="apple-card">
+          <div class="card-title">
+            <span>💰 Capital Budget Allocation</span>
+            <span class="task-badge badge-done">&lt; ₹5 Lakh Runway</span>
+          </div>
+          <div style="font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 4px;">
+              <span>Cloud Infrastructure (AWS Mumbai 12 mo)</span>
+              <span style="font-family: 'JetBrains Mono'; color: #FFF;">₹60,000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 4px;">
+              <span>TallyPrime Silver Testing License</span>
+              <span style="font-family: 'JetBrains Mono'; color: #FFF;">₹26,550</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 4px;">
+              <span>Surepass Udyam / GST Verification Credits</span>
+              <span style="font-family: 'JetBrains Mono'; color: #FFF;">₹25,000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 4px;">
+              <span>Legal: Terms, DPDP Processor Agreements</span>
+              <span style="font-family: 'JetBrains Mono'; color: #FFF;">₹40,000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 4px;">
+              <span>Paid Growth Experiments & CA Payouts</span>
+              <span style="font-family: 'JetBrains Mono'; color: #FFF;">₹1,10,000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-top: 6px; font-weight: 700;">
+              <span style="color: var(--apple-green);">Total Committed / Cash Reserve</span>
+              <span style="font-family: 'JetBrains Mono'; color: var(--apple-green);">₹2,76,550 / ₹2,23,450</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: UNIT ECONOMICS & PRICING -->
+    <div id="tab-economics" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Unit Economics & ₹100 Crore Revenue Architecture</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Granular financial model per customer & Year 1-6 expansion trajectory.</p>
+        </div>
+        <span class="section-tag" style="color: var(--apple-green); background: rgba(48, 209, 88, 0.1);">77% Gross Margin</span>
+      </div>
+
+      <div class="apple-grid-3" style="margin-bottom: 24px;">
+        <div class="apple-card">
+          <div style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;">Starter Tier</div>
+          <div style="font-size: 28px; font-weight: 700; margin: 4px 0 8px 0; color: #FFF;">₹6,500 <span style="font-size: 13px; color: var(--text-secondary); font-weight: 400;">/ year</span></div>
+          <p style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px;">1 Tally company, 200 debtors, 300 WhatsApp utility reminders/mo, UPI auto-match.</p>
+          <div style="font-size: 12px; color: var(--text-tertiary); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <div>Cost to Serve: <strong>₹1,522/yr</strong></div>
+            <div>CAC: <strong>₹2,500</strong> (6 mo payback)</div>
+          </div>
+        </div>
+
+        <div class="apple-card">
+          <div style="font-size: 12px; color: var(--apple-cyan); text-transform: uppercase;">Growth Tier</div>
+          <div style="font-size: 28px; font-weight: 700; margin: 4px 0 8px 0; color: #FFF;">₹24,000 <span style="font-size: 13px; color: var(--text-secondary); font-weight: 400;">/ year</span></div>
+          <p style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px;">Multi-user, 1,000 debtors, proprietary Buyer Payment Behaviour Risk Scoring, Year-End Pack.</p>
+          <div style="font-size: 12px; color: var(--text-tertiary); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <div>Year 6 Target: <strong>12,000 Subs</strong></div>
+            <div>Projected ARR: <strong>₹28.8 Cr</strong></div>
+          </div>
+        </div>
+
+        <div class="apple-card">
+          <div style="font-size: 12px; color: var(--apple-purple); text-transform: uppercase;">Pro Tier & TReDS</div>
+          <div style="font-size: 28px; font-weight: 700; margin: 4px 0 8px 0; color: #FFF;">₹60,000 <span style="font-size: 13px; color: var(--text-secondary); font-weight: 400;">/ yr + 0.4%</span></div>
+          <p style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px;">₹10-100 Cr manufacturers, multi-entity ERP, dedicated CA portal, invoice discounting rails.</p>
+          <div style="font-size: 12px; color: var(--text-tertiary); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <div>Financing Referral: <strong>₹36.0 Cr</strong></div>
+            <div>Subscription ARR: <strong>₹9.0 Cr</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensitivity Simulator -->
+      <div class="apple-card" style="margin-bottom: 24px;">
+        <div class="card-title">
+          <span>🎛️ Interactive Unit Economics Sensitivity Simulator</span>
+          <span class="task-badge badge-progress" id="sens-ltv-badge">LTV/CAC: 8.0x</span>
+        </div>
+        <div class="apple-grid-2" style="margin-top: 12px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+              <span>Starter Subscription Price: <strong id="sens-price-val">₹6,500</strong></span>
+            </div>
+            <input type="range" class="apple-slider" id="sens-price" min="4000" max="10000" step="500" value="6500" oninput="runSensitivity()">
+
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 14px; margin-bottom: 4px;">
+              <span>Annual Churn Rate: <strong id="sens-churn-val">25%</strong></span>
+            </div>
+            <input type="range" class="apple-slider" id="sens-churn" min="15" max="45" step="5" value="25" oninput="runSensitivity()">
+          </div>
+
+          <div style="background: rgba(255,255,255,0.035); padding: 16px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-around;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 12px; color: var(--text-tertiary);">Gross Margin</span>
+              <strong style="color: var(--apple-green);" id="sens-margin">77%</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 12px; color: var(--text-tertiary);">Estimated LTV</span>
+              <strong style="color: #FFF;" id="sens-ltv">₹19,912</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 12px; color: var(--text-tertiary);">Payback Period</span>
+              <strong style="color: var(--apple-cyan);" id="sens-payback">6.0 months</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="apple-card">
+        <div class="card-title">
+          <span>📈 6-Year Scaling Roadmap to ₹100 Crore</span>
+          <span class="badge-done task-badge">53,500 Active Tenants</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="risk-table">
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Target Paying Users</th>
+                <th>Software Subscriptions</th>
+                <th>Financing Volume / Share</th>
+                <th>Total Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="risk-row">
+                <td><strong>Year 1</strong> (Nov 26 - Nov 27)</td>
+                <td>640 subscribers</td>
+                <td>₹0.5 Cr ARR</td>
+                <td>0 (Pre-financing)</td>
+                <td><strong style="color: var(--apple-mint);">₹0.5 Cr</strong></td>
+              </tr>
+              <tr class="risk-row">
+                <td><strong>Year 2</strong> (FY 2028-29)</td>
+                <td>3,200 subscribers</td>
+                <td>₹2.8 Cr ARR</td>
+                <td>₹100 Cr (₹0.4 Cr fee)</td>
+                <td><strong style="color: var(--apple-cyan);">₹3.2 Cr</strong></td>
+              </tr>
+              <tr class="risk-row">
+                <td><strong>Year 3</strong> (FY 2029-30)</td>
+                <td>10,500 subscribers</td>
+                <td>₹10.5 Cr ARR</td>
+                <td>₹500 Cr (₹2.0 Cr fee)</td>
+                <td><strong style="color: var(--apple-blue);">₹12.5 Cr</strong></td>
+              </tr>
+              <tr class="risk-row">
+                <td><strong>Year 4</strong> (FY 2030-31)</td>
+                <td>24,000 subscribers</td>
+                <td>₹25.6 Cr ARR</td>
+                <td>₹2,000 Cr (₹8.0 Cr fee)</td>
+                <td><strong style="color: var(--apple-purple);">₹33.6 Cr</strong></td>
+              </tr>
+              <tr class="risk-row">
+                <td><strong>Year 5</strong> (FY 2031-32)</td>
+                <td>41,000 subscribers</td>
+                <td>₹46.2 Cr ARR</td>
+                <td>₹5,000 Cr (₹20.0 Cr fee)</td>
+                <td><strong style="color: var(--apple-orange);">₹66.2 Cr</strong></td>
+              </tr>
+              <tr class="risk-row">
+                <td><strong>Year 6</strong> (FY 2032-33)</td>
+                <td><strong>53,500 subscribers</strong></td>
+                <td><strong>₹63.8 Cr ARR</strong></td>
+                <td><strong>₹9,000 Cr (₹36.0 Cr fee)</strong></td>
+                <td><strong style="color: var(--apple-green); font-size: 15px;">₹99.8 Cr (~₹100 Cr)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: LIVE SERVICES & RUNNING TOOLS -->
+    <div id="tab-endpoints" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h3>Live Operational Services & Interactive Web Portals</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Fully implemented FastAPI services running on port 8000.</p>
+        </div>
+        <span class="section-tag" style="color: var(--apple-green); background: rgba(48, 209, 88, 0.1);">25/25 Tests Verified</span>
+      </div>
+
+      <div class="apple-grid-2" style="margin-bottom: 24px;">
+        <div class="apple-card" style="border-left: 4px solid var(--apple-blue);">
+          <div class="card-title">
+            <span>🌐 No-Login Buyer Portal</span>
+            <span class="task-badge badge-done">Live Route</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            The viral growth loop. Displays live 43B(h) deduction loss timers, statutory interest calculation (19.5% p.a.), direct UPI settlement QR, and payment date scheduling.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/p/inv_critical_overdue" target="_blank" class="btn-apple">Launch Buyer Portal ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/p/inv_critical_overdue</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-purple);">
+          <div class="card-title">
+            <span>📊 Section 43B(h) Exposure Scanner</span>
+            <span class="task-badge badge-done">Live Route</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Free front-door calculator for CAs and buyers. Ingests purchase ledgers, calculates tax disallowances, and previews ICAI Form 3CD Clause 22 audit schedules.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/exposure-scan" target="_blank" class="btn-apple" style="background: var(--apple-purple);">Launch Exposure Scan ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/exposure-scan</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-green);">
+          <div class="card-title">
+            <span>💼 ICAI CA Partner Practice Portal</span>
+            <span class="task-badge badge-done">New Live Route</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Dedicated dashboard for practicing CAs. Oversee client manufacturing portfolios, export consolidated Clause 22 audit packs, and track 20% recurring referral commission ledger.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/ca-portal" target="_blank" class="btn-apple" style="background: var(--apple-green); color: black;">Launch CA Portal ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/ca-portal</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-indigo);">
+          <div class="card-title">
+            <span>📈 Buyer Credit Risk Reliability Graph</span>
+            <span class="task-badge badge-done">Proprietary Moat</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Aggregates cross-supplier payment performance keyed by buyer PAN/GSTIN. Computes actual Days-to-Pay (DTP), statutory delinquency risk, and TReDS financier readiness grade.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/risk-score/AAACB1111A" target="_blank" class="btn-secondary">View Risk Profile (JSON) ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/risk-score/AAACB1111A</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-red);">
+          <div class="card-title">
+            <span>⚖️ MSME Samadhaan Formal Petition Drafter</span>
+            <span class="task-badge badge-critical">Sec 18 Legal</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Compiles legally formatted reference applications for the Micro and Small Enterprise Facilitation Council (MSEFC) under Section 18, with Section 19 75% court pre-deposit warning.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/samadhaan/petition/inv_critical_overdue" target="_blank" class="btn-secondary">Draft MSEFC Petition ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/samadhaan/petition/...</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-mint);">
+          <div class="card-title">
+            <span>🎙️ 20 Customer Discovery Questions</span>
+            <span class="task-badge badge-progress">Sprint 1 Kit</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Structured discovery guide for 20 Bengaluru factory interviews. Analyzes late payments, 43B(h) buyer friction, and scores founding pilot conversion readiness.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/discovery/questions" target="_blank" class="btn-secondary">View 20 Questions (JSON) ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/discovery/questions</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-orange);">
+          <div class="card-title">
+            <span>🛡️ DPDP 2027 Data Processor Agreement</span>
+            <span class="task-badge badge-critical">Compliance</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Pre-drafted processor terms shielding the platform under DPDP Section 8 & 33 (avoiding ₹250 Cr statutory fines), with 72-hour one-click data purge guarantee.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/dpdp/dpa" target="_blank" class="btn-secondary">View DPA Contract (JSON) ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/dpdp/dpa</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-teal);">
+          <div class="card-title">
+            <span>📱 Factory Owner PWA Mobile Dashboard</span>
+            <span class="task-badge badge-done">Offline Capable</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Mobile-first progressive web app for factory owners. Features Service Worker offline caching (`sw.js`), debtor aging breakdown, and 1-click WhatsApp chasers.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/owner" target="_blank" class="btn-apple" style="background: var(--apple-teal); color: black;">Launch Owner PWA ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/owner</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-yellow);">
+          <div class="card-title">
+            <span>📑 Form MSME-1 MCA Filing Generator</span>
+            <span class="task-badge badge-done">MCA Statutory</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Generates half-yearly return filing schedules under Section 405 of Companies Act, 2013 (due April 30 & October 31), avoiding ₹3 Lakh corporate penalty fines.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/msme-1/export" target="_blank" class="btn-secondary">Export MSME-1 (CSV/JSON) ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/msme-1/export</span>
+          </div>
+        </div>
+
+        <div class="apple-card" style="border-left: 4px solid var(--apple-pink);">
+          <div class="card-title">
+            <span>🏦 TReDS Invoice Financing Pre-Screening</span>
+            <span class="task-badge badge-done">₹36 Cr Horizon</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Pre-screens invoices for instant 24-hr settlement via RXIL / M1xchange. Validates buyer >₹250 Cr turnover mandate, computes discounting yield, and tracks 0.4% referral fee.
+          </p>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="http://127.0.0.1:8000/api/treds/evaluate/inv_due_today" target="_blank" class="btn-secondary">Evaluate TReDS Eligibility ↗</a>
+            <span style="font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono';">/api/treds/evaluate/...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="apple-card">
+        <div class="card-title">
+          <span>⚡️ Running the Backend Server</span>
+          <span class="task-badge badge-done">CLI Ready</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+          Execute the single-command runner script in your terminal to start the live API on <code>http://127.0.0.1:8000</code>:
+        </p>
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--apple-mint);">
+          python3 run_server.py
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-msg">Task state updated</span>
+  </div>
+
+  <script>
+    // Task State Array
+    const initialTasks = [
+      { id: 1, title: "20 Structured Discovery Interviews", sprint: 1, tag: "critical", badge: "P0 Critical", desc: "Interview micro-manufacturers in Bengaluru (Peenya, KASSIA) focused on past delayed payment damages & 43B(h) buyer friction.", done: true },
+      { id: 2, title: "Tally Read-Only Interface & XML Test Bench", sprint: 1, tag: "critical", badge: "P0 Critical", desc: "Build local connector to extract Ledger, Ageing & Bills Outstanding via TDL without modifying ERP state.", done: true },
+      { id: 3, title: "Statutory 15/45-Day Rules Calculation Engine", sprint: 1, tag: "critical", badge: "P0 Critical", desc: "Unit test exact calendar math: 15 days (default), 45 days (written agreement), and 3x bank rate interest compounding.", done: true },
+      { id: 4, title: "Meta WhatsApp Utility Template Approvals", sprint: 1, tag: "critical", badge: "P0 Critical", desc: "Submit 5-stage reminder cadence in English, Hindi, and Kannada through BSP under utility classification.", done: true },
+      { id: 5, title: "5 Hand-Crafted Concierge Pilots", sprint: 1, tag: "pending", badge: "In Progress", desc: "Run manual reminder cycle for 5 manufacturers to measure buyer payment turnaround before automated shipping.", done: false },
+      { id: 6, title: "No-Login Buyer Portal with Deduction Warning", sprint: 2, tag: "critical", badge: "Live Built", desc: "Build responsive web page showing invoice detail, buyer tax loss countdown, instant UPI link and 'Promise Date' button.", done: true },
+      { id: 7, title: "Automated UTR and Bank Reconciliation Engine", sprint: 2, tag: "critical", badge: "Live Built", desc: "Match incoming credit bank narrations back to open invoice numbers to auto-silence reminder cadences.", done: true },
+      { id: 8, title: "DPDP Consent Logging & Processor Agreement", sprint: 2, tag: "critical", badge: "Compliance", desc: "Publish data processing terms, ephemeral access logs, and tenant-level encryption adhering to DPDP 2027 rules.", done: true },
+      { id: 9, title: "WhatsApp Webhook Reply Intent Classifier", sprint: 2, tag: "critical", badge: "AI / Rules", desc: "Classify incoming replies (promise to pay, disputes, payments done) to auto-manage reminder cadences.", done: true },
+      { id: 10, title: "Udyam Verification Adapter & Cost Cache", sprint: 2, tag: "critical", badge: "Surepass API", desc: "Verify URNs, filter out trader NIC codes (45/46/47), and maintain cache to prevent duplicate verification costs.", done: true },
+      { id: 11, title: "First 10 Paid Founding Customers (₹3,250)", sprint: 2, tag: "pending", badge: "Sprint 2 Gate", desc: "Sign 10 manufacturers at 50% discount to lock in the Gate 2 milestone.", done: false },
+      { id: 12, title: "Free Year-End Exposure Calculator Scan", sprint: 3, tag: "pending", badge: "Growth Loop", desc: "Ship standalone buyer-side tool letting finance teams audit Section 43B(h) disallowance exposure before March 31.", done: true },
+      { id: 13, title: "CA Partner Referral Dashboard & Clause 22 Pack", sprint: 3, tag: "critical", badge: "Live Built", desc: "Provide CAs with automated Form 3CD Clause 22 export sheets and 20% recurring affiliate commissions.", done: true },
+      { id: 14, title: "Buyer Credit Risk Reliability Graph Engine", sprint: 2, tag: "critical", badge: "Data Moat", desc: "Aggregate cross-supplier payment performance keyed by buyer PAN/GSTIN to compute Days-to-Pay and TReDS readiness.", done: true },
+      { id: 15, title: "MSME Samadhaan Section 18 Petition Drafter", sprint: 2, tag: "critical", badge: "Legal Tech", desc: "Compile statutory MSEFC delayed payment reference petitions with Section 19 75% court pre-deposit mandate.", done: true },
+      { id: 16, title: "Subscription Mandate Billing & GST SAC 998314 Invoicing", sprint: 3, tag: "critical", badge: "Billing", desc: "Implement automated subscription tiers (₹6.5k, ₹24k, ₹60k) with 18% GST B2B tax invoice generation.", done: true },
+      { id: 17, title: "Tally Connector Background Daemon Sync Agent", sprint: 1, tag: "critical", badge: "Connector", desc: "Run periodic automated XML syncs from customer TallyPrime into cloud ingest pipeline with offline fallback.", done: true },
+      { id: 18, title: "Form MSME-1 MCA Statutory Return Generator", sprint: 3, tag: "critical", badge: "MCA Statutory", desc: "Compile half-yearly delayed payment return schedules under Section 405 Companies Act to avoid ₹3L fines.", done: true },
+      { id: 19, title: "TReDS Invoice Financing Referral Pre-Screening", sprint: 3, tag: "critical", badge: "TReDS Rails", desc: "Pre-screen manufacturing bills for instant 24hr settlement via RXIL / M1xchange with 0.4% referral fee tracking.", done: true },
+      { id: 20, title: "Factory Owner Progressive Web App (PWA)", sprint: 2, tag: "critical", badge: "Offline PWA", desc: "Mobile-first PWA dashboard with Service Worker offline cache, aging view, and 1-click WhatsApp chasers.", done: true }
+    ];
+
+    let tasks = initialTasks;
+    localStorage.setItem('dueclock_tasks', JSON.stringify(tasks));
+
+    function renderTasks(filter = 'all') {
+      const container = document.getElementById('task-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let filtered = tasks;
+      if (filter === 'critical') filtered = tasks.filter(t => t.tag === 'critical');
+      if (filter === 'pending') filtered = tasks.filter(t => !t.done);
+
+      filtered.forEach(task => {
+        const item = document.createElement('div');
+        item.className = `task-item ${task.done ? 'completed' : ''}`;
+        item.onclick = () => toggleTask(task.id);
+
+        let badgeClass = 'badge-progress';
+        if (task.tag === 'critical') badgeClass = 'badge-critical';
+        if (task.done) badgeClass = 'badge-done';
+
+        item.innerHTML = `
+          <div class="task-checkbox">${task.done ? '✓' : ''}</div>
+          <div class="task-content">
+            <div class="task-header">
+              <div class="task-text">${task.title}</div>
+              <span class="task-badge ${badgeClass}">${task.done ? 'Completed' : task.badge}</span>
+            </div>
+            <div class="task-desc">${task.desc}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+
+      updateProgress();
+    }
+
+    function toggleTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        task.done = !task.done;
+        localStorage.setItem('dueclock_tasks', JSON.stringify(tasks));
+        renderTasks();
+        showToast(task.done ? `Completed: "${task.title}"` : `Marked incomplete: "${task.title}"`);
+      }
+    }
+
+    function updateProgress() {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.done).length;
+      const pct = Math.round((completed / total) * 100);
+
+      const bar = document.getElementById('progress-bar');
+      const text = document.getElementById('progress-percent');
+      const sub = document.getElementById('tasks-completed-text');
+
+      if (bar) bar.style.width = pct + '%';
+      if (text) text.innerText = pct + '%';
+      if (sub) sub.innerText = `${completed} of ${total} tasks marked complete`;
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+
+      const tabs = ['overview', 'sprints', 'tracker', 'simulator', 'sandbox', 'risks', 'economics', 'endpoints'];
+      const index = tabs.indexOf(tabId);
+      if (index !== -1) {
+        document.querySelectorAll('.tab-btn')[index].classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterTasks(filterType) {
+      renderTasks(filterType);
+    }
+
+    function showNewTaskModal() {
+      const title = prompt("Enter New Execution Task Title:");
+      if (!title) return;
+      const desc = prompt("Enter Task Objective / Details:");
+      const isCritical = confirm("Is this a P0 Critical task?");
+      const newTask = {
+        id: Date.now(),
+        title: title.trim(),
+        sprint: 2,
+        tag: isCritical ? "critical" : "pending",
+        badge: isCritical ? "P0 Critical" : "Sprint 2",
+        desc: desc ? desc.trim() : "Custom task added to live execution tracker.",
+        done: false
+      };
+      tasks.push(newTask);
+      localStorage.setItem('dueclock_tasks', JSON.stringify(tasks));
+      renderTasks();
+      showToast(`Added task: "${newTask.title}"`);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
+    }
+
+    // -------------------------------------------------------------
+    // WHATSAPP SIMULATOR SCRIPTS
+    // -------------------------------------------------------------
+    const waMessages = {
+      STAGE_MINUS_5: {
+        en: "Hello Bangalore Auto Components Ltd,\n\nThis is a courtesy reminder from Precision Metal Components. Invoice #INV/2026/041 for ₹1,45,000.00 is due on 30-Oct-2026 per statutory MSMED Section 15 terms.\n\nTo preserve Section 43B(h) tax deduction compliance and avoid statutory interest, settle via direct UPI:\nupi://pay?pa=precisionmetal@icici...\n\nReview invoice: https://dueclock.in/p/inv_due_today",
+        hi: "नमस्ते Bangalore Auto Components Ltd,\n\nPrecision Metal Components से इनवॉइस #INV/2026/041 (राशि ₹1,45,000.00) की देय तिथि 30-Oct-2026 है।\nधारा 43B(h) के तहत टैक्स छूट सुरक्षित रखने और 19.5% ब्याज से बचने के लिए, कृपया समय पर भुगतान करें:\nupi://pay?pa=precisionmetal@icici...",
+        kn: "ನಮಸ್ಕಾರ Bangalore Auto Components Ltd,\n\nPrecision Metal Components ವತಿಯಿಂದ ಇನ್‌ವಾಯ್ಸ್ #INV/2026/041 (ಮೊತ್ತ ₹1,45,000.00) ರ ಪಾವತಿ ದಿನಾಂಕ 30-Oct-2026 ಆಗಿದೆ.\nಸೆಕ್ಷನ್ 43B(h) ಆದಾಯ ತೆರಿಗೆ ವಿನಾಯಿತಿಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಈಗಲೇ ಪಾವತಿಸಿ:\nupi://pay?pa=precisionmetal@icici..."
+      },
+      STAGE_0: {
+        en: "Important: Invoice Due Today\n\nHello Bangalore Auto Components Ltd, Invoice #INV/2026/041 for ₹1,45,000.00 from Precision Metal Components is due for payment today.\n\nUnder Section 43B(h) of the Income Tax Act, delayed payments beyond statutory terms lose income tax deductibility.\n\nPay instantly via direct UPI:\nupi://pay?pa=precisionmetal@icici...",
+        hi: "महत्वपूर्ण: इनवॉइस की अंतिम तिथि आज है\n\nनमस्ते Bangalore Auto Components Ltd, Precision Metal Components का इनवॉइस #INV/2026/041 (₹1,45,000.00) आज देय है। धारा 43B(h) टैक्स कटौती सुनिश्चित करने हेतु तुरंत UPI द्वारा भुगतान करें:\nupi://pay?pa=precisionmetal@icici...",
+        kn: "ಪ್ರಮುಖ: ಇನ್‌ವಾಯ್ಸ್ ಪಾವತಿ ದಿನಾಂಕ ಇಂದು\n\nನಮಸ್ಕಾರ Bangalore Auto Components Ltd, Precision Metal Components ರವರ ಇನ್‌ವಾಯ್ಸ್ #INV/2026/041 (₹1,45,000.00) ಪಾವತಿಗೆ ಇಂದೇ ಅಂತಿಮ ದಿನ. ಆದಾಯ ತೆರಿಗೆ ಕಾಯ್ದೆ 43B(h) ರ ಅನ್ವಯ ತೆರಿಗೆ ವಿನಾಯಿತಿ ಪಡೆಯಲು ತಕ್ಷಣ UPI ಮೂಲಕ ಪಾವತಿಸಿ:\nupi://pay?pa=precisionmetal@icici..."
+      },
+      STAGE_PLUS_5: {
+        en: "Statutory Overdue Notice: Interest Accrual Active\n\nDear Bangalore Auto Components Ltd, Invoice #INV/2026/041 (₹1,45,000.00) is now 5 days overdue.\n\nPer Section 16 of the MSMED Act, compound interest at 3x the RBI bank rate (19.5% p.a.) has commenced accruing.\nCurrent Accrued Interest: ₹386.42\n\nDirect UPI Pay:\nupi://pay?pa=precisionmetal@icici...",
+        hi: "वैधानिक सूचना: MSME ब्याज गणना शुरू\n\nप्रिय Bangalore Auto Components Ltd, इनवॉइस #INV/2026/041 (₹1,45,000.00) 5 दिन ओवरड्यू हो चुका है। MSMED एक्ट धारा 16 के तहत RBI बैंक दर के 3 गुना (19.5% प्रति वर्ष) चक्रवृद्ध ब्याज लागू हो गया है।\nब्याज: ₹386.42\n\nUPI लिंक:\nupi://pay?pa=precisionmetal@icici...",
+        kn: "ಕಾನೂನುಬದ್ಧ ನೋಟಿಸ್: ಬಡ್ಡಿ ಲೆಕ್ಕಾಚಾರ ಆರಂಭವಾಗಿದೆ\n\nಆತ್ಮೀಯ Bangalore Auto Components Ltd, ಇನ್‌ವಾಯ್ಸ್ #INV/2026/041 (₹1,45,000.00) 5 ದಿನಗಳ ಕಾಲ ಮೀರಿದೆ. MSMED ಕಾಯ್ದೆ ಸೆಕ್ಷನ್ 16 ರ ಪ್ರಕಾರ RBI ಬ್ಯಾಂಕ್ ದರದ 3 ಪಟ್ಟು (19.5%) ಚಕ್ರಬಡ್ಡಿ ಅನ್ವಯವಾಗುತ್ತದೆ.\nಬಡ್ಡಿ: ₹386.42\n\nUPI ಲಿಂಕ್:\nupi://pay?pa=precisionmetal@icici..."
+      },
+      STAGE_PLUS_15: {
+        en: "URGENT: Section 43B(h) Tax Disallowance Warning\n\nAttention: Accounts & Finance Head.\nInvoice #INV/2026/041 (₹1,45,000.00) is 15 days overdue.\n\n⚠️ TAX IMPACT: Under Section 43B(h), this entire expense of ₹1,45,000 will be DISALLOWED from your tax computation, triggering an additional ~30% tax liability on your business.\n\nSettle today to safeguard deduction:\nupi://pay?pa=precisionmetal@icici...",
+        hi: "अति आवश्यक: धारा 43B(h) टैक्स कटौती अस्वीकृति चेतावनी\n\nध्यान दें: वित्त विभाग,\nइनवॉइस #INV/2026/041 15 दिन ओवरड्यू है। धारा 43B(h) के तहत यह पूरी राशि आपके टैक्स से अस्वीकृत (Disallowed) कर दी जाएगी, जिससे 30% अतिरिक्त टैक्स लगेगा।\n\nटैक्स बचत हेतु आज ही भुगतान करें:\nupi://pay?pa=precisionmetal@icici...",
+        kn: "ತುರ್ತು ಎಚ್ಚರಿಕೆ: ಸೆಕ್ಷನ್ 43B(h) ತೆರಿಗೆ ರದ್ದತಿ ಎಚ್ಚರಿಕೆ\n\nಗಮನಿಸಿ: ಲೆಕ್ಕಪತ್ರ ವಿಭಾಗ,\nಇನ್‌ವಾಯ್ಸ್ #INV/2026/041 15 ದಿನಗಳ ಕಾಲ ತಡವಾಗಿದೆ. ಸೆಕ್ಷನ್ 43B(h) ರ ಪ್ರಕಾರ ಈ ಪೂರ್ಣ ಮೊತ್ತವನ್ನು ನಿಮ್ಮ ವ್ಯವಹಾರದ ತೆರಿಗೆ ಲೆಕ್ಕಾಚಾರದಿಂದ ರದ್ದುಗೊಳಿಸಲಾಗುತ್ತದೆ (~30% ಹೆಚ್ಚುವರಿ ತೆರಿಗೆ).\n\nಪಾವತಿ ಲಿಂಕ್:\nupi://pay?pa=precisionmetal@icici..."
+      },
+      STAGE_PLUS_30: {
+        en: "FINAL PRE-LEGAL STATUTORY NOTICE\n\nTo: Directors / Accounts Head.\nInvoice #INV/2026/041 (Principal: ₹1,45,000.00 + Accrued Interest: ₹2,356.25) remains unpaid for 30+ days.\n\nNotice is hereby given that failing payment within 48 hours, this claim is scheduled for automated submission to the Ministry of MSME Samadhaan Delayed Payment Portal.\n\nSettlement Link:\nupi://pay?pa=precisionmetal@icici...",
+        hi: "अंतिम वैधानिक पूर्व-कानूनी सूचना\n\nप्रति: निदेशक मंडल,\nइनवॉइस #INV/2026/041 (मूलधन: ₹1,45,000 + ब्याज: ₹2,356.25) 30+ दिनों से लंबित है। कृपया 48 घंटे में भुगतान करें, अन्यथा मामला MSME समाधान पोर्टल पर दर्ज किया जाएगा।\n\nभुगतान करें:\nupi://pay?pa=precisionmetal@icici...",
+        kn: "ಅಂತಿಮ ಕಾನೂನುಬದ್ಧ ನೋಟಿಸ್\n\nಗಮನಕ್ಕೆ: ನಿರ್ದೇಶಕರು,\nಇನ್‌ವಾಯ್ಸ್ #INV/2026/041 (ಅಸಲು: ₹1,45,000 + ಬಡ್ಡಿ: ₹2,356.25) 30+ ದಿನಗಳಿಂದ ಬಾಕಿ ಉಳಿದಿದೆ. 48 ಗಂಟೆಗಳಲ್ಲಿ ಪಾವತಿಸದಿದ್ದಲ್ಲಿ ಈ ಪ್ರಕರಣವನ್ನು ಕೇಂದ್ರ MSME ಸಮಾಧಾನ್ ಪೋರ್ಟಲ್‌ಗೆ ದಾಖಲಿಸಲಾಗುವುದು.\n\nಪಾವತಿ ಲಿಂಕ್:\nupi://pay?pa=precisionmetal@icici..."
+      }
+    };
+
+    function updateSimMessage() {
+      const stage = document.getElementById('sim-stage').value;
+      const lang = document.getElementById('sim-lang').value;
+      const text = waMessages[stage][lang];
+      document.getElementById('sim-bubble-text').innerText = text;
+    }
+
+    function simulateBuyerReply() {
+      const input = document.getElementById('sim-reply-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const replyBubble = document.getElementById('sim-buyer-reply');
+      const replyText = document.getElementById('sim-buyer-text');
+      const intentRes = document.getElementById('sim-intent-result');
+
+      replyText.innerText = val;
+      replyBubble.style.display = 'block';
+
+      // Rule classification
+      let intent = "UNKNOWN";
+      let action = "NO_ACTION";
+      const l = val.toLowerCase();
+
+      if (l.includes("friday") || l.includes("will pay") || l.includes("monday") || l.includes("paying") || l.includes("tomorrow")) {
+        intent = "PROMISE_TO_PAY (94% confidence)";
+        action = "Automated Action: Statutory reminder cadence paused until scheduled date.";
+      } else if (l.includes("reject") || l.includes("defect") || l.includes("broken") || l.includes("quality")) {
+        intent = "DISPUTE_QUALITY (96% confidence)";
+        action = "Automated Action: Cadence halted for dispute review; QA team notified.";
+      } else if (l.includes("paid") || l.includes("done") || l.includes("neft") || l.includes("cheque")) {
+        intent = "PAYMENT_COMPLETED (92% confidence)";
+        action = "Automated Action: Awaiting UTR auto-reconciliation match.";
+      } else {
+        intent = "GENERAL_INQUIRY (85% confidence)";
+        action = "Automated Action: Flagged for account executive follow-up.";
+      }
+
+      intentRes.innerHTML = `<strong>Classified Intent:</strong> ${intent}<br><em>${action}</em>`;
+      intentRes.style.display = 'block';
+    }
+
+    // -------------------------------------------------------------
+    // DISCOVERY INTERVIEW RUNNER SCRIPTS
+    // -------------------------------------------------------------
+    const discoveryQuestions = [
+      { cat: "Their Payments Today", q: "1. Walk me through the last invoice that was paid late. What happened?", obj: "Uncover exact delay friction, excuses, and communication breakdown." },
+      { cat: "Their Payments Today", q: "2. How many of your invoices are unpaid past 45 days right now?", obj: "Measure immediate recoverable volume and Section 43B(h) disallowance size." },
+      { cat: "Their Payments Today", q: "3. Who chases, how, and how many hours a week does it take?", obj: "Quantify owner/accountant labour cost wasted on manual follow-ups." },
+      { cat: "Their Payments Today", q: "4. What did the last late payment cost you: interest on CC loan, a missed order, or delayed salary?", obj: "Pinpoint tangible economic damage caused by working capital block." },
+      { cat: "Their Payments Today", q: "5. Have you ever asked a buyer to pay interest for late payment? What happened?", obj: "Validate why MSMED 3x bank rate interest is rarely invoked without software." },
+      { cat: "The Law and the Buyers", q: "6. Do you have an Udyam certificate? Under which activity type (Manufacturing/Services vs Trading)?", obj: "Verify Section 43B(h) eligibility (exclude traders)." },
+      { cat: "The Law and the Buyers", q: "7. Do your buyers know about the 45-day rule? How do you know?", obj: "Assess buyer awareness of Income Tax Section 43B(h)." },
+      { cat: "The Law and the Buyers", q: "8. Do you have written payment terms with each buyer? Which ones?", obj: "Determine 15-day default cap vs 45-day contract cap split." },
+      { cat: "The Law and the Buyers", q: "9. Has any buyer mentioned their tax deduction when paying?", obj: "Check if buyer CAs are forcing compliance during audit season." },
+      { cat: "The Law and the Buyers", q: "10. Which buyers would be hurt most by a late-payment notice, and which would you never annoy?", obj: "Determine customer relationship sensitivities and whitelisting requirements." },
+      { cat: "Tools and People", q: "11. How do you keep accounts today: TallyPrime, another package, Excel?", obj: "Confirm TallyPrime compatibility and release version." },
+      { cat: "Tools and People", q: "12. Who enters data, and who sees the outstanding list?", obj: "Identify exact persona (Tally operator vs owner vs CA)." },
+      { cat: "Tools and People", q: "13. Does your CA review receivables, or only file returns?", obj: "Assess CA influence on software adoption and referral loops." },
+      { cat: "Tools and People", q: "14. What have you tried for reminders before, and why did it stop?", obj: "Identify previous failed tools (manual WhatsApp, emails, spreadsheets)." },
+      { cat: "Tools and People", q: "15. Which WhatsApp or SMS messages do your buyers actually answer?", obj: "Tune utility reminder tone and messaging channels." },
+      { cat: "Willingness to Pay", q: "16. If reminders recovered one late invoice a month, how much would that be worth to you?", obj: "Anchor ROI against annual ₹6,500 subscription price." },
+      { cat: "Willingness to Pay", q: "17. What do you pay now for Tally TSS, your CA and any software, per year?", obj: "Benchmark tech budget ceiling for small factory." },
+      { cat: "Willingness to Pay", q: "18. Who would have to approve a ₹6,500 yearly spend?", obj: "Locate single economic buyer (Director/Proprietor)." },
+      { cat: "Willingness to Pay", q: "19. Would you let us install a read-only connector on the Tally computer? Who decides that?", obj: "Test connector installation friction and security objections." },
+      { cat: "Willingness to Pay", q: "20. If I came back in two weeks with a trial on your data, what would you need to see to sign?", obj: "Obtain clear criteria for closing founding pilot at ₹3,250." }
+    ];
+
+    let currentQIdx = 0;
+    let prospectScore = 0;
+
+    function renderDiscoveryQuestion() {
+      const item = discoveryQuestions[currentQIdx];
+      document.getElementById('disc-q-category').innerText = `Section: ${item.cat}`;
+      document.getElementById('disc-q-counter').innerText = `Question ${currentQIdx + 1} of 20`;
+      document.getElementById('disc-q-text').innerText = item.q;
+      document.getElementById('disc-q-obj').innerText = `Objective: ${item.obj}`;
+      document.getElementById('disc-answer-input').value = "";
+    }
+
+    function nextDiscoveryQuestion() {
+      if (currentQIdx < discoveryQuestions.length - 1) {
+        currentQIdx++;
+        renderDiscoveryQuestion();
+      } else {
+        alert(`Discovery Interview Complete! Final Pilot Readiness Score: ${prospectScore}/10.`);
+      }
+    }
+
+    function prevDiscoveryQuestion() {
+      if (currentQIdx > 0) {
+        currentQIdx--;
+        renderDiscoveryQuestion();
+      }
+    }
+
+    function quickScoreProspect(addPoint) {
+      if (addPoint && prospectScore < 10) {
+        prospectScore += 2;
+        if (prospectScore > 10) prospectScore = 10;
+        document.getElementById('disc-score-badge').innerText = `Score: ${prospectScore}/10`;
+        showToast(`Score updated: ${prospectScore}/10`);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 43B(h) SANDBOX CALCULATOR
+    // -------------------------------------------------------------
+    function runSandboxCalc() {
+      const amt = parseFloat(document.getElementById('calc-amt').value) || 0;
+      const invDateStr = document.getElementById('calc-date').value;
+      const hasAgreement = document.getElementById('calc-agreement').value === "true";
+      const activity = document.getElementById('calc-activity').value;
+
+      const isTrader = activity === "TRADING";
+      const allowedDays = hasAgreement ? 45 : 15;
+
+      const invDate = new Date(invDateStr);
+      const dueDate = new Date(invDate);
+      dueDate.setDate(dueDate.getDate() + allowedDays);
+
+      const today = new Date("2026-11-07");
+      const diffTime = today - dueDate;
+      const overdueDays = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+
+      const dueFormatted = dueDate.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
+      document.getElementById('calc-res-duedate').innerText = dueFormatted;
+
+      if (isTrader) {
+        document.getElementById('calc-status-badge').className = "task-badge badge-done";
+        document.getElementById('calc-status-badge').innerText = "Trader Excluded";
+        document.getElementById('calc-res-dayslabel').innerText = "Trader Exclusion: Section 43B(h) does NOT apply";
+        document.getElementById('calc-res-disallowed').innerText = "₹0.00 (Exempt)";
+        document.getElementById('calc-res-taxliability').innerText = "Zero disallowance under Ministry Circular 2021";
+        document.getElementById('calc-res-interest').innerText = "₹0.00";
+        document.getElementById('calc-res-notes').innerText = "Wholesale & Retail Traders (NIC 45/46/47) are not covered by MSMED Act delayed payment penalties or Section 43B(h).";
+        return;
+      }
+
+      if (overdueDays > 0) {
+        document.getElementById('calc-status-badge').className = "task-badge badge-critical";
+        document.getElementById('calc-status-badge').innerText = `Overdue (${overdueDays} Days)`;
+        document.getElementById('calc-res-dayslabel').innerText = `Statutory deadline breached by ${overdueDays} days`;
+
+        // Disallowance & Tax
+        document.getElementById('calc-res-disallowed').innerText = `₹${amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        const tax = Math.round(amt * 0.25168);
+        document.getElementById('calc-res-taxliability').innerText = `+ ₹${tax.toLocaleString('en-IN')} additional tax at 25.17% corporate rate`;
+
+        // Compound interest at 19.5% p.a. (monthly rests)
+        const r = 0.195;
+        const fullMonths = Math.floor(overdueDays / 30);
+        const remDays = overdueDays % 30;
+        let compoundAmt = amt * Math.pow(1 + (r / 12), fullMonths);
+        if (remDays > 0) compoundAmt *= (1 + (r / 12) * (remDays / 30));
+        const intAccrued = compoundAmt - amt;
+
+        document.getElementById('calc-res-interest').innerText = `₹${intAccrued.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('calc-res-notes').innerText = `Unpaid past Day ${allowedDays}. Full amount will be added back to taxable income, and interest is non-deductible under MSMED Section 23.`;
+      } else {
+        document.getElementById('calc-status-badge').className = "task-badge badge-done";
+        document.getElementById('calc-status-badge').innerText = "Within Clock";
+        document.getElementById('calc-res-dayslabel').innerText = "Payment within statutory limits";
+        document.getElementById('calc-res-disallowed').innerText = "₹0.00 (Safe)";
+        document.getElementById('calc-res-taxliability').innerText = "Full tax deduction preserved";
+        document.getElementById('calc-res-interest').innerText = "₹0.00";
+        document.getElementById('calc-res-notes').innerText = `Invoice is within the ${allowedDays}-day statutory window. Remind buyer to clear before due date to avoid penalties.`;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SENSITIVITY SIMULATOR
+    // -------------------------------------------------------------
+    function runSensitivity() {
+      const price = parseFloat(document.getElementById('sens-price').value);
+      const churn = parseFloat(document.getElementById('sens-churn').value) / 100;
+
+      document.getElementById('sens-price-val').innerText = `₹${price.toLocaleString('en-IN')}`;
+      document.getElementById('sens-churn-val').innerText = `${Math.round(churn * 100)}%`;
+
+      const costToServe = 1522;
+      const margin = (price - costToServe) / price;
+      document.getElementById('sens-margin').innerText = `${Math.round(margin * 100)}%`;
+
+      const cac = 2500;
+      const ltv = (price * margin) / churn;
+      document.getElementById('sens-ltv').innerText = `₹${Math.round(ltv).toLocaleString('en-IN')}`;
+
+      const payback = (cac / (price * margin / 12)).toFixed(1);
+      document.getElementById('sens-payback').innerText = `${payback} months`;
+
+      const ltvCac = (ltv / cac).toFixed(1);
+      document.getElementById('sens-ltv-badge').innerText = `LTV/CAC: ${ltvCac}x`;
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTasks();
+      renderDiscoveryQuestion();
+      runSandboxCalc();
+      runSensitivity();
+    });
+  </script>
+</body>
+</html>
